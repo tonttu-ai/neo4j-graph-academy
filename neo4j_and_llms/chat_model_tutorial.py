@@ -1,7 +1,9 @@
 import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain.schema.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain.prompts.prompt import PromptTemplate
+from langchain.chains import LLMChain
 
 # load the .env file
 load_dotenv()
@@ -11,16 +13,19 @@ chat_llm = ChatOpenAI(
     openai_api_key=os.getenv("OPENAI_API_KEY")
 )
 
-instructions = SystemMessage(content="""
-You are a surfer dude, having a conversation about the surf conditions on the beach.
+prompt = PromptTemplate(
+    template="""You are a surfer dude, having a conversation about the surf conditions on the beach.
 Respond using surfer slang.
-""")
 
-question = HumanMessage(content="What is the weather like in Wedge Island, Western Australia?")
+Question: {question}
+""",
+    input_variables=["question"],
+)
 
-response = chat_llm.invoke([
-    instructions,
-    question
-])
+chat_chain = LLMChain(llm=chat_llm, prompt=prompt)
 
-print(response.content)
+#question = HumanMessage(content="What is the weather like in Wedge Island, Western Australia?")
+
+response = chat_chain.invoke({"question": "What is the weather like in Wedge Island, Western Australia?"})
+
+print(response)
