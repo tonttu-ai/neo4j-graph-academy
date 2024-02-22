@@ -13,19 +13,38 @@ chat_llm = ChatOpenAI(
     openai_api_key=os.getenv("OPENAI_API_KEY")
 )
 
+# create a new instance of the PromptTemplate class
 prompt = PromptTemplate(
     template="""You are a surfer dude, having a conversation about the surf conditions on the beach.
 Respond using surfer slang.
 
+Context: {context}
 Question: {question}
 """,
-    input_variables=["question"],
+    input_variables=["context", "question"],
 )
 
+# create a new instance of the LLMChain class
 chat_chain = LLMChain(llm=chat_llm, prompt=prompt)
 
-#question = HumanMessage(content="What is the weather like in Wedge Island, Western Australia?")
+# providing context
+current_weather = """
+    {
+        "surf": [
+            {"beach": "Fistral", "conditions": "6ft waves and offshore winds"},
+            {"beach": "Polzeath", "conditions": "Flat and calm"},
+            {"beach": "Watergate Bay", "conditions": "3ft waves and onshore winds"},
+            {"beach": "Wedge Island", "conditions": "4ft waves and offshore winds"}
+        ]
+    }"""
 
-response = chat_chain.invoke({"question": "What is the weather like in Wedge Island, Western Australia?"})
+# invoke the chat_chain
+
+response = chat_chain.invoke(
+    {   
+        "context": current_weather,
+        "question": "Where is the best place to surf today?"
+    }
+)
 
 print(response)
