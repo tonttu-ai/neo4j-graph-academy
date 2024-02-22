@@ -26,7 +26,7 @@ prompt = PromptTemplate(template="""
                         input_variables=["chat_history", "context", "question"])
 
 # create a new instance of the LLMChain class
-memory = ConversationBufferMemory(memory_key="chat_history", input_key="question", return_messages=True)
+memory = ConversationBufferMemory(memory_key="chat_history", input_key="question", return_messages=True, verbose=True)
 
 chat_chain = LLMChain(llm=chat_llm, prompt=prompt, memory=memory)
 
