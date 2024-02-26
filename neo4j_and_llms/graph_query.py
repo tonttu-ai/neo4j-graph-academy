@@ -1,10 +1,15 @@
+import os
+from dotenv import load_dotenv
 from langchain_community.graphs import Neo4jGraph
+
+# load the .env file
+load_dotenv()
 
 # create a graph object, including connection to the neo4j database
 graph = Neo4jGraph(
-    url="bolt://44.201.38.129:7687",
-    username="neo4j",
-    password="journals-cupful-lot"
+    url=os.getenv("NEO4J_URL"),
+    username=os.getenv("NEO4J_USER"),
+    password=os.getenv("NEO4J_PASSWORD"),
 )
 
 result = graph.query("""
