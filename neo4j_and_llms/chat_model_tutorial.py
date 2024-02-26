@@ -28,6 +28,7 @@ prompt = PromptTemplate(template="""
 # create a new instance of the LLMChain class
 memory = ConversationBufferMemory(memory_key="chat_history", input_key="question", return_messages=True, verbose=True)
 
+# assign the LLMChain instance to the chat_chain variable
 chat_chain = LLMChain(llm=chat_llm, prompt=prompt, memory=memory)
 
 # providing context
@@ -42,15 +43,8 @@ current_weather = """
     }"""
 
 # invoke the chat_chain
+while True:
+    question = input("> ")
+    response = chat_chain.invoke({"context": current_weather, "question": question})
 
-response = chat_chain.invoke({
-    "context": current_weather,
-    "question": "Hi, I am at Watergate Bay. What is the surf like?"
-})
-print(response["text"])
-
-response = chat_chain.invoke({
-    "context": current_weather,
-    "question": "Where I am?"
-})
-print(response["text"])
+    print(response["text"])
